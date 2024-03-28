@@ -1,0 +1,81 @@
+version: "3.8"
+
+services:
+  mariadb:
+    container_name: mariadb
+    image: mariadb:11.3.2
+    platform: linux/arm64
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./bash/init-maria-db.sh:/docker-entrypoint-initdb.d/init-maria-db.sh
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PW}
+    restart: always
+    healthcheck:
+      interval: 30s
+      retries: 3
+      test:
+        [
+          "CMD",
+          "healthcheck.sh",
+          "--su-mysql",
+          "--connect",
+          "--innodb_initialized"
+        ]
+      timeout: 30s
+    networks:
+      - db
+    ports:
+      - "3306:3306"
+
+#  influxdb:
+#    image: influxdb:latest
+#    restart: always
+#    volumes:
+#      - ./influxdb:/var/lib/influxdb
+#
+#  telegraf:
+#    image: telegraf:latest
+#    volumes:
+#      - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
+#    restart: always
+#    depends_on:
+#      - influxdb
+#
+#  grafana:
+#    image: grafana/grafana:latest
+#    volumes:
+#      - ./grafana:/var/lib/grafana
+#    ports:
+#      - "3000:3000"
+#    depends_on:
+#      - influxdb
+#    restart: always
+#    networks:
+#      - db
+#
+#  watchtower:
+#    image: containrrr/watchtower:latest
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock
+#
+#  yacht:
+#    image: selfhostedpro/yacht:latest
+#    volumes:
+#      - ./yacht:/config
+#      - /var/run/docker.sock:/var/run/docker.sock
+#    environment:
+#      PASSWORD: ${YACHT_PASSWORD}
+#    restart: always
+#    networks:
+#      - db
+#    ports:
+#      - "8000:8000"
+
+volumes:
+  mariadb_data:
+#  influx_data:
+#    driver: local
+
+networks:
+  db:

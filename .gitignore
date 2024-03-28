@@ -1,0 +1,20 @@
+# Ignore .env file containing sensitive data
+.env
+
+# Ignore Volumes data
+**/influxdb/*
+**/grafana/*
+**/mariadb/*
+**/yacht/*
+
+# Docker ignore
+**/docker-compose.override.yml
+
+# Mac OS files
+.DS_Store
+
+# log files
+*.log
+
+# idea files
+.idea

@@ -1,0 +1,3 @@
+setup:
+  - project: sideproject-docker-stack
+    config: dev
