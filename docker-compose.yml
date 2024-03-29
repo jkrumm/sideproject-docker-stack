@@ -10,10 +10,11 @@ services:
       - ./bash/init-maria-db.sh:/docker-entrypoint-initdb.d/init-maria-db.sh
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PW}
-    restart: always
+    restart: unless-stopped
     healthcheck:
-      interval: 30s
-      retries: 3
+      interval: 10s
+      retries: 5
+      timeout: 10s
       test:
         [
           "CMD",
@@ -22,60 +23,89 @@ services:
           "--connect",
           "--innodb_initialized"
         ]
-      timeout: 30s
     networks:
       - db
+      - monitoring
     ports:
       - "3306:3306"
 
-#  influxdb:
-#    image: influxdb:latest
-#    restart: always
-#    volumes:
-#      - ./influxdb:/var/lib/influxdb
-#
-#  telegraf:
-#    image: telegraf:latest
-#    volumes:
-#      - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
-#    restart: always
-#    depends_on:
-#      - influxdb
-#
-#  grafana:
-#    image: grafana/grafana:latest
-#    volumes:
-#      - ./grafana:/var/lib/grafana
-#    ports:
-#      - "3000:3000"
-#    depends_on:
-#      - influxdb
-#    restart: always
-#    networks:
-#      - db
-#
-#  watchtower:
-#    image: containrrr/watchtower:latest
-#    volumes:
-#      - /var/run/docker.sock:/var/run/docker.sock
-#
-#  yacht:
-#    image: selfhostedpro/yacht:latest
-#    volumes:
-#      - ./yacht:/config
-#      - /var/run/docker.sock:/var/run/docker.sock
-#    environment:
-#      PASSWORD: ${YACHT_PASSWORD}
-#    restart: always
-#    networks:
-#      - db
-#    ports:
-#      - "8000:8000"
+  influxdb:
+    container_name: influxdb
+    image: influxdb:2.7.5
+    platform: linux/arm64
+    entrypoint: ./entrypoint.sh
+    restart: unless-stopped
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: jkrumm
+      DOCKER_INFLUXDB_INIT_PASSWORD: ${INFLUX_PW}
+      DOCKER_INFLUXDB_INIT_ORG: jkrumm
+      DOCKER_INFLUXDB_INIT_BUCKET: monitoring
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ${INFLUX_TOKEN}
+    healthcheck:
+      test: "curl -f http://influxdb:8086/ping"
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - influxdb_data:/var/lib/influxdb
+    networks:
+      - monitoring
+
+  telegraf:
+    container_name: telegraf
+    image: telegraf:1.30.0
+    platform: linux/arm64
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /:/hostfs:ro
+      - ./telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    user: telegraf:0
+    environment:
+      HOST_ETC: /hostfs/etc
+      HOST_PROC: /hostfs/proc
+      HOST_SYS: /hostfs/sys
+      HOST_VAR: /hostfs/var
+      HOST_RUN: /hostfs/run
+      HOST_MOUNT_PREFIX: /hostfs
+      DOCKER_INFLUXDB_INIT_ORG: jkrumm
+      DOCKER_INFLUXDB_INIT_BUCKET: monitoring
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: ${INFLUX_TOKEN}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PW}
+    networks:
+      - monitoring
+      - db
+    depends_on:
+      influxdb:
+        condition: service_healthy
+      mariadb:
+        condition: service_healthy
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:10.1.9-ubuntu
+    platform: linux/arm64
+    restart: unless-stopped
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - telegraf
+      - mariadb
+    networks:
+      - db
+      - monitoring
+    environment:
+      GF_SECURITY_ADMIN_USER: jkrumm
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PW}
+    ports:
+      - "3000:3000"
 
 volumes:
   mariadb_data:
-#  influx_data:
-#    driver: local
+  influxdb_data:
+  grafana_data:
 
 networks:
   db:
+  monitoring:
