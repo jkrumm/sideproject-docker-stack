@@ -2,10 +2,9 @@
 .env
 
 # Ignore Volumes data
-**/influxdb/*
-**/grafana/*
-**/mariadb/*
-**/yacht/*
+**/mariadb_data/*
+**/influxdb_data/*
+**/grafana_data/*
 
 # Docker ignore
 **/docker-compose.override.yml

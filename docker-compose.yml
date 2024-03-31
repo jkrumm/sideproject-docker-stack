@@ -10,6 +10,8 @@ services:
       - ./bash/init-maria-db.sh:/docker-entrypoint-initdb.d/init-maria-db.sh
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PW}
+      DB_READ_PW: ${DB_READ_PW}
+      DB_FPP_PW: ${DB_FPP_PW}
     restart: unless-stopped
     healthcheck:
       interval: 10s
@@ -33,7 +35,6 @@ services:
     container_name: influxdb
     image: influxdb:2.7.5
     platform: linux/arm64
-    entrypoint: ./entrypoint.sh
     restart: unless-stopped
     environment:
       DOCKER_INFLUXDB_INIT_MODE: setup
@@ -48,7 +49,8 @@ services:
       timeout: 10s
       retries: 5
     volumes:
-      - influxdb_data:/var/lib/influxdb
+      - influxdb_data:/var/lib/influxdb2
+      - influxdb_data:/etc/influxdb2
     networks:
       - monitoring
 
@@ -89,6 +91,7 @@ services:
     restart: unless-stopped
     volumes:
       - grafana_data:/var/lib/grafana
+      - ./grafana/:/etc/grafana/provisioning
     depends_on:
       - telegraf
       - mariadb
@@ -98,6 +101,8 @@ services:
     environment:
       GF_SECURITY_ADMIN_USER: jkrumm
       GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_PW}
+      DB_READ_PW: ${DB_READ_PW}
+      INFLUX_TOKEN: ${INFLUX_TOKEN}
     ports:
       - "3000:3000"
 
