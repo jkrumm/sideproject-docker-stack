@@ -104,12 +104,35 @@ services:
       DB_READ_PW: ${DB_READ_PW}
       INFLUX_TOKEN: ${INFLUX_TOKEN}
     ports:
-      - "3000:3000"
+      - "3000:3100"
+
+  fpp-analytics:
+    container_name: fpp-analytics
+    platform: linux/arm64
+    restart: unless-stopped
+    build:
+      context: ./fpp_analytics/
+      dockerfile: Dockerfile
+    environment:
+      LOG_LEVEL: INFO
+      ANALYTICS_SECRET_TOKEN: ${ANALYTICS_SECRET_TOKEN}
+      DB_HOST: mariadb
+      DB_USERNAME: fpp
+      DB_PASSWORD: ${DB_FPP_PW}
+    depends_on:
+      - mariadb
+    networks:
+      - db
+    volumes:
+      - fpp_analytics_data:/usr/src/app
+    ports:
+      - "5100:5100"
 
 volumes:
   mariadb_data:
   influxdb_data:
   grafana_data:
+  fpp_analytics_data:
 
 networks:
   db:
