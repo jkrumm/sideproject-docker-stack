@@ -128,11 +128,29 @@ services:
     ports:
       - "5100:5100"
 
+  bun-email-api:
+    container_name: bun-email-api
+    platform: linux/arm64
+    restart: unless-stopped
+    build:
+      context: ./bun_email_api/
+      dockerfile: Dockerfile
+    environment:
+      BEA_GMAIL_APP_PASSWORD: ${BEA_GMAIL_APP_PASSWORD}
+      BEA_GMAIL_EMAIL: ${BEA_GMAIL_EMAIL}
+      BEA_RECEIVER_EMAIL: ${BEA_RECEIVER_EMAIL}
+      BEA_SECRET_KEY: ${BEA_SECRET_KEY}
+    volumes:
+      - bun_email_api_data:/usr/src/app
+    ports:
+      - "3010:3010"
+
 volumes:
   mariadb_data:
   influxdb_data:
   grafana_data:
   fpp_analytics_data:
+  bun_email_api_data:
 
 networks:
   db:
