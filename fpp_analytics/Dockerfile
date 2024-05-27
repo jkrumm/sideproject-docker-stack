@@ -4,7 +4,7 @@ FROM python:3.11.1
 # Set the working directory in the container
 WORKDIR /usr/src/app
 
-# Install git
+# Install git and other package dependencies
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y git
@@ -15,13 +15,13 @@ RUN git clone https://github.com/jkrumm/free-planning-poker.git
 # Set the working directory in the container to your app directory
 WORKDIR /usr/src/app/free-planning-poker/analytics
 
-# Pull the latest changes
-RUN git pull
+# Pull the latest changes (ensure this reflects what you want)
+RUN git -C /usr/src/app/free-planning-poker pull
 
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Make port 5000 available to the world outside this container
+# Make port 5100 available to the world outside this container
 EXPOSE 5100
 
 # Run app.py when the container launches

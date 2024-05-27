@@ -46,11 +46,12 @@ Later there will probably be added more services like:
 ### Rebuild fpp-analytics
 Just run:
 ``` shell
-./fpp_analytics/rebuild-fpp_analytics.sh
+./fpp_analytics/rebuild-fpp_analytics.sh fpp-analytics
 ```
 Steps explained:
-1. Stop the fpp-analytics container by running `docker-compose stop fpp-analytics`
-2. Delete the container by running `docker rm fpp-analytics`
-3. Delete the fpp-analytics image by running `docker rmi sideproject-docker-stack-fpp-analytics`
-4. Prune build cache by running `docker builder prune -f`
-5. Start the fpp-analytics container by running `doppler run -- docker-compose up -d fpp-analytics`
+1. **Stop the Container**: The script stops the `fpp-analytics` container.
+2. **Remove the Container**: Any existing `fpp-analytics` container is removed.
+3. **Remove the Image**: The associated Docker image is identified and removed.
+4. **Prune Build Cache**: Docker's build cache is pruned to avoid using any cached layers.
+5. **Rebuild the Image**: The `fpp-analytics` image is rebuilt from scratch with no cache.
+6. **Start the Container**: The freshly built `fpp-analytics` container is started.

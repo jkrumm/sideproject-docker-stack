@@ -119,12 +119,13 @@ services:
       DB_HOST: mariadb
       DB_USERNAME: fpp
       DB_PASSWORD: ${DB_FPP_PW}
+      DATA_DIR: /usr/src/app/data
     depends_on:
       - mariadb
     networks:
       - db
     volumes:
-      - fpp_analytics_data:/usr/src/app
+      - fpp_analytics_data:/usr/src/app/data
     ports:
       - "5100:5100"
 
