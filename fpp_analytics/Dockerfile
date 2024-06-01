@@ -15,9 +15,6 @@ RUN git clone https://github.com/jkrumm/free-planning-poker.git
 # Set the working directory in the container to your app directory
 WORKDIR /usr/src/app/free-planning-poker/analytics
 
-# Pull the latest changes (ensure this reflects what you want)
-RUN git -C /usr/src/app/free-planning-poker pull
-
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 

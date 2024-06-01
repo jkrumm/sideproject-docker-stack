@@ -116,16 +116,18 @@ services:
     environment:
       LOG_LEVEL: INFO
       ANALYTICS_SECRET_TOKEN: ${ANALYTICS_SECRET_TOKEN}
+      BEA_BASE_URL: ${BEA_BASE_URL}
+      BEA_SECRET_KEY: ${BEA_SECRET_KEY}
       DB_HOST: mariadb
       DB_USERNAME: fpp
       DB_PASSWORD: ${DB_FPP_PW}
-      DATA_DIR: /usr/src/app/data
     depends_on:
       - mariadb
     networks:
       - db
+      - backend
     volumes:
-      - fpp_analytics_data:/usr/src/app/data
+      - fpp_analytics_data:/usr/src/app
     ports:
       - "5100:5100"
 
@@ -137,10 +139,11 @@ services:
       context: ./bun_email_api/
       dockerfile: Dockerfile
     environment:
-      BEA_GMAIL_APP_PASSWORD: ${BEA_GMAIL_APP_PASSWORD}
-      BEA_GMAIL_EMAIL: ${BEA_GMAIL_EMAIL}
       BEA_RECEIVER_EMAIL: ${BEA_RECEIVER_EMAIL}
       BEA_SECRET_KEY: ${BEA_SECRET_KEY}
+      BEA_RESEND_API_KEY: ${BEA_RESEND_API_KEY}
+    networks:
+      - backend
     volumes:
       - bun_email_api_data:/usr/src/app
     ports:
@@ -156,3 +159,4 @@ volumes:
 networks:
   db:
   monitoring:
+  backend:

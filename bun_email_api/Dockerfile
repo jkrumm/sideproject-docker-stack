@@ -19,9 +19,6 @@ RUN git clone https://github.com/jkrumm/bun-email-api.git
 # Set the working directory in the container to your app directory
 WORKDIR /usr/src/app/bun-email-api
 
-# Pull the latest changes
-RUN git pull
-
 # Install any needed packages
 RUN bun install
 
