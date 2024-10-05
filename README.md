@@ -20,6 +20,7 @@ Infrastructure:
 - Grafana
 
 Projects:
+- FFP Server (Bun Websocket Server)
 - FPP Analytics (Flask API)
 
 <br />
@@ -43,7 +44,7 @@ Later there will probably be added more services like:
 4. Run `doppler run -- docker-compose up -d`
 
 ## Other Notes
-### Rebuild fpp-analytics
+### Rebuild fpp-analytics or ffp-server
 Just run:
 ``` shell
 ./fpp_analytics/rebuild-fpp_analytics.sh fpp-analytics

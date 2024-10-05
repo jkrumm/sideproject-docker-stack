@@ -2,25 +2,25 @@
 
 # Check if a container name was provided as an argument
 if [ -z "$1" ]; then
-  echo "Usage: $0 <bun-email-api|fpp-analytics>"
+  echo "Usage: $0 <fpp-server|fpp-analytics>"
   exit 1
 fi
 
 containerName="$1"
 
 # Validate container name
-if [ "$containerName" != "bun-email-api" ] && [ "$containerName" != "fpp-analytics" ]; then
-  echo "Invalid container name. Only 'bun-email-api' or 'fpp-analytics' are allowed."
+if [ "$containerName" != "fpp-server" ] && [ "$containerName" != "fpp-analytics" ] && [ "$containerName" != "mariadb-backup" ]; then
+  echo "Invalid container name. Only 'fpp-server' or 'fpp-analytics' are allowed."
   exit 1
 fi
 
 # Stop the container
 echo "Stopping container ${containerName} if running..."
-doppler run -- docker-compose stop $containerName
+doppler run -- docker compose stop $containerName
 
 # Remove the container
 echo "Removing container ${containerName}..."
-doppler run -- docker-compose rm -f $containerName
+doppler run -- docker compose rm -f $containerName
 
 # Define the full image name
 fullImageName="sideproject-docker-stack-${containerName}"
@@ -41,8 +41,11 @@ case "$containerName" in
   "fpp-analytics")
     volumeName="sideproject-docker-stack_fpp_analytics_data"
     ;;
-  "bun-email-api")
-    volumeName="sideproject-docker-stack_bun_email_api_data"
+  "fpp-server")
+    volumeName="sideproject-docker-stack_fpp_server_data"
+    ;;
+  "mariadb-backup")
+    volumeName="sideproject-docker-stack_mariadb_backup_data"
     ;;
 esac
 
@@ -59,10 +62,10 @@ docker system prune -f
 
 # Rebuild the container without cache
 echo "Rebuilding container ${containerName}..."
-doppler run -- docker-compose build --no-cache $containerName
+doppler run -- docker compose build --no-cache $containerName
 
 # Bring the container up in detached mode
 echo "Starting container ${containerName}..."
-doppler run -- docker-compose up -d $containerName
+doppler run -- docker compose up $containerName
 
 echo "Done!"

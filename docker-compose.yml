@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
   mariadb:
     container_name: mariadb
@@ -30,6 +28,16 @@ services:
       - monitoring
     ports:
       - "3306:3306"
+
+#  mariadb-backup:
+#    container_name: mariadb-backup
+#    build: ./mariadb_backup
+#    environment:
+#      DB_READ_PW: ${DB_READ_PW}
+#    command: crond -f -d 8
+#    restart: always
+#    volumes:
+#      - mariadb_backup_data:/backup
 
   influxdb:
     container_name: influxdb
@@ -106,6 +114,21 @@ services:
     ports:
       - "3000:3100"
 
+  fpp-server:
+    container_name: fpp-server
+    platform: linux/arm64
+    restart: unless-stopped
+    build:
+      context: ./fpp_server/
+      dockerfile: Dockerfile
+    environment:
+      LOG_LEVEL: INFO
+      FPP_SERVER_SECRET: ${FPP_SERVER_SECRET}
+    volumes:
+      - fpp_server_data:/usr/src/app
+    ports:
+      - "3003:3003"
+
   fpp-analytics:
     container_name: fpp-analytics
     platform: linux/arm64
@@ -131,28 +154,12 @@ services:
     ports:
       - "5100:5100"
 
-  bun-email-api:
-    container_name: bun-email-api
-    platform: linux/arm64
-    restart: unless-stopped
-    build:
-      context: ./bun_email_api/
-      dockerfile: Dockerfile
-    environment:
-      BEA_RECEIVER_EMAIL: ${BEA_RECEIVER_EMAIL}
-      BEA_SECRET_KEY: ${BEA_SECRET_KEY}
-      BEA_RESEND_API_KEY: ${BEA_RESEND_API_KEY}
-    networks:
-      - backend
-    volumes:
-      - bun_email_api_data:/usr/src/app
-    ports:
-      - "3010:3010"
-
 volumes:
   mariadb_data:
+  mariadb_backup_data:
   influxdb_data:
   grafana_data:
+  fpp_server_data:
   fpp_analytics_data:
   bun_email_api_data:
 

@@ -1,0 +1,6 @@
+# Run backup at 3am every day
+# 0 3 * * * /mariadb-backup.sh
+* * * * * sh -c 'echo "Running backup script"; \
+echo "DB_READ_PW: $DB_READ_PW"; \
+backup_dir="/backup"; \
+mkdir -p ${backup_dir};'
