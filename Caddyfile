@@ -1,0 +1,7 @@
+{
+   email jkrumm@pm.me
+}
+
+server.free-planning-poker.com {
+   reverse_proxy fpp-server:3003
+}

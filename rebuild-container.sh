@@ -66,6 +66,6 @@ doppler run -- docker compose build --no-cache $containerName
 
 # Bring the container up in detached mode
 echo "Starting container ${containerName}..."
-doppler run -- docker compose up $containerName
+doppler run -- docker compose up -d $containerName
 
 echo "Done!"

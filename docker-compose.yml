@@ -126,8 +126,8 @@ services:
       FPP_SERVER_SECRET: ${FPP_SERVER_SECRET}
     volumes:
       - fpp_server_data:/usr/src/app
-    ports:
-      - "3003:3003"
+    networks:
+      - proxy
 
   fpp-analytics:
     container_name: fpp-analytics
@@ -154,6 +154,22 @@ services:
     ports:
       - "5100:5100"
 
+  caddy:
+    image: caddy:2
+    container_name: caddy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    environment:
+      - DOMAIN=free-planning-poker.com
+    restart: unless-stopped
+    networks:
+      - proxy
+
 volumes:
   mariadb_data:
   mariadb_backup_data:
@@ -161,9 +177,11 @@ volumes:
   grafana_data:
   fpp_server_data:
   fpp_analytics_data:
-  bun_email_api_data:
+  caddy_data:
+  caddy_config:
 
 networks:
+  proxy:
   db:
   monitoring:
   backend:
