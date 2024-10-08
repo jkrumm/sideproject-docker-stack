@@ -22,6 +22,9 @@ fi
 mariadb -uroot -p"$MYSQL_ROOT_PASSWORD" <<-EOSQL
 CREATE USER IF NOT EXISTS 'read'@'%' IDENTIFIED BY '${DB_READ_PW}';
 GRANT SELECT, SHOW VIEW, TRIGGER, LOCK TABLES, EVENT ON *.* TO 'read'@'%';
+GRANT EXECUTE ON `sys`.* TO 'read'@'%';
+GRANT SHOW DATABASES ON *.* TO 'read'@'%';
+GRANT SELECT ON `sys`.* TO 'read'@'%';
 
 CREATE DATABASE IF NOT EXISTS \`free-planning-poker\` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 
