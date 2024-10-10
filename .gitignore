@@ -17,3 +17,7 @@
 
 # idea files
 .idea
+
+# Ignore MariaDB backups
+/mariadb_backup/backups/*
+/mariadb_backup/restore/*

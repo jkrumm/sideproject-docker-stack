@@ -56,3 +56,17 @@ Steps explained:
 4. **Prune Build Cache**: Docker's build cache is pruned to avoid using any cached layers.
 5. **Rebuild the Image**: The `fpp-analytics` image is rebuilt from scratch with no cache.
 6. **Start the Container**: The freshly built `fpp-analytics` container is started.
+
+### Backup MariaDB
+To trigger a backup of the MariaDB database the container needs to be running.
+``` shell
+./mariadb_backups/trigger-backup.sh
+```
+Backups will then be stored in the `mariadb_backups/backups` directory.
+
+### Restore MariaDB
+To restore a MariaDB backup the container needs to be running.
+``` shell
+./mariadb_backups/restore.sh
+```
+Then automatically the backup called `restore` in the `mariadb_backups/restore`directory will be restored.

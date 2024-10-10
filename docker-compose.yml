@@ -6,6 +6,8 @@ services:
     volumes:
       - mariadb_data:/var/lib/mysql
       - ./bash/init-maria-db.sh:/docker-entrypoint-initdb.d/init-maria-db.sh
+      - ./mariadb_backup/backup.sh:/backup.sh
+      - ./mariadb_backup/backups:/backups
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PW}
       DB_READ_PW: ${DB_READ_PW}
@@ -28,16 +30,6 @@ services:
       - monitoring
     ports:
       - "3306:3306"
-
-#  mariadb-backup:
-#    container_name: mariadb-backup
-#    build: ./mariadb_backup
-#    environment:
-#      DB_READ_PW: ${DB_READ_PW}
-#    command: crond -f -d 8
-#    restart: always
-#    volumes:
-#      - mariadb_backup_data:/backup
 
   influxdb:
     container_name: influxdb
@@ -157,6 +149,7 @@ services:
   caddy:
     image: caddy:2
     container_name: caddy
+    platform: linux/arm64
     ports:
       - "80:80"
       - "443:443"
@@ -172,7 +165,6 @@ services:
 
 volumes:
   mariadb_data:
-  mariadb_backup_data:
   influxdb_data:
   grafana_data:
   fpp_server_data:
