@@ -24,7 +24,7 @@ echo "Restoring the database"
 docker run --rm -v sideproject-docker-stack_mariadb_data:/var/lib/mysql -v "$RESTORE_DIR":/restore alpine sh -c "cp -r /restore/* /var/lib/mysql/"
 
 # Uncomment this line if you encounter permission issues
-# docker run --rm -v sideproject-docker-stack_mariadb_data:/var/lib/mysql alpine sh -c "chown -R 999:999 /var/lib/mysql"
+#docker run --rm -v sideproject-docker-stack_mariadb_data:/var/lib/mysql alpine sh -c "chown -R 999:999 /var/lib/mysql"
 
 echo "Deleting the restore directory to prevent accidental reuse"
 rm -rf "$RESTORE_DIR"

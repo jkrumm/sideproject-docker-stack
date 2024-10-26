@@ -43,6 +43,27 @@ Later there will probably be added more services like:
 3. Set up the Doppler project by running `doppler setup`
 4. Run `doppler run -- docker-compose up -d`
 
+## MariaDB
+
+### Backup MariaDB
+To trigger a backup of the MariaDB database the container needs to be running.
+``` shell
+./mariadb_backups/trigger-backup.sh
+```
+Backups will then be stored in the `mariadb_backups/backups` directory.
+
+### Download MariaDB Backup
+Modify and run the following command to download the backup called `backup` from the `mariadb_backups/backups` directory:
+``` shell
+scp -r root@{ip}:/home/jkrumm/sideproject-docker-stack/mariadb_backup/backups /Users/jkrumm/Downloads
+```
+
+### Restore MariaDB
+Run the following command to restore the backup called `restore` in the `mariadb_backups/restore` directory:
+``` shell
+./mariadb_backups/restore.sh
+```
+
 ## Other Notes
 ### Rebuild fpp-analytics or ffp-server
 Just run:
@@ -56,17 +77,3 @@ Steps explained:
 4. **Prune Build Cache**: Docker's build cache is pruned to avoid using any cached layers.
 5. **Rebuild the Image**: The `fpp-analytics` image is rebuilt from scratch with no cache.
 6. **Start the Container**: The freshly built `fpp-analytics` container is started.
-
-### Backup MariaDB
-To trigger a backup of the MariaDB database the container needs to be running.
-``` shell
-./mariadb_backups/trigger-backup.sh
-```
-Backups will then be stored in the `mariadb_backups/backups` directory.
-
-### Restore MariaDB
-To restore a MariaDB backup the container needs to be running.
-``` shell
-./mariadb_backups/restore.sh
-```
-Then automatically the backup called `restore` in the `mariadb_backups/restore`directory will be restored.

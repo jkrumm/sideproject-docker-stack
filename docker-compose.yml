@@ -12,6 +12,7 @@ services:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PW}
       DB_READ_PW: ${DB_READ_PW}
       DB_FPP_PW: ${DB_FPP_PW}
+      DB_HEALTHCHECK_PW: ${DB_HEALTHCHECK_PW}
     restart: unless-stopped
     healthcheck:
       interval: 10s
