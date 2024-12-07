@@ -43,7 +43,23 @@ Later there will probably be added more services like:
 3. Set up the Doppler project by running `doppler setup`
 4. Run `doppler run -- docker-compose up -d`
 
-## MariaDB
+## MariaDB Dump
+``` shell
+/usr/local/mysql-8.0.34-macos13-arm64/bin/mysqldump \
+--result-file=/Users/jkrumm/SDS_PROD_ROOT-2024_10_26_12_48_56-dump.sql \
+--skip-lock-tables \
+--skip-add-locks \
+--no-tablespaces \
+--create-options \
+--column-statistics=0 \
+--add-drop-table \
+--user=root \
+--host=5.75.178.196 \
+--port=3306 \
+-p \
+free-planning-poker \
+fpp_estimations fpp_events fpp_feature_flags fpp_page_views fpp_rooms fpp_users fpp_votes
+```
 
 ### Backup MariaDB
 To trigger a backup of the MariaDB database the container needs to be running.
