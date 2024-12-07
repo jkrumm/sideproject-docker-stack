@@ -2,15 +2,15 @@
 
 # Check if a container name was provided as an argument
 if [ -z "$1" ]; then
-  echo "Usage: $0 <fpp-server|fpp-analytics>"
+  echo "Usage: $0 <fpp-server|fpp-analytics|snow-finder>"
   exit 1
 fi
 
 containerName="$1"
 
 # Validate container name
-if [ "$containerName" != "fpp-server" ] && [ "$containerName" != "fpp-analytics" ] && [ "$containerName" != "mariadb-backup" ]; then
-  echo "Invalid container name. Only 'fpp-server' or 'fpp-analytics' are allowed."
+if [ "$containerName" != "fpp-server" ] && [ "$containerName" != "fpp-analytics" ] &&  [ "$containerName" != "snow-finder" ]; then
+  echo "Invalid container name. Only 'fpp-server' or 'fpp-analytics' or 'snow-finder' are allowed."
   exit 1
 fi
 
@@ -44,8 +44,8 @@ case "$containerName" in
   "fpp-server")
     volumeName="sideproject-docker-stack_fpp_server_data"
     ;;
-  "mariadb-backup")
-    volumeName="sideproject-docker-stack_mariadb_backup_data"
+  "snow-finder")
+    volumeName="sideproject-docker-stack_snow_finder_data"
     ;;
 esac
 

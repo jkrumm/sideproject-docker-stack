@@ -163,12 +163,27 @@ services:
     networks:
       - proxy
 
+  snow-finder:
+    container_name: snow-finder
+    platform: linux/arm64
+    restart: unless-stopped
+    build:
+      context: ./snow_finder/
+      dockerfile: Dockerfile
+    volumes:
+      - snow_finder_data:/usr/src/app
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    ports:
+      - "8000:8000"
+
 volumes:
   mariadb_data:
   influxdb_data:
   grafana_data:
   fpp_server_data:
   fpp_analytics_data:
+  snow_finder_data:
   caddy_data:
   caddy_config:
 
