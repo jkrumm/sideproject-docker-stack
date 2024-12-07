@@ -172,6 +172,7 @@ services:
       - snow_finder_data:/usr/src/app
     environment:
       OPENAI_API_KEY: ${OPENAI_API_KEY}
+      BASE_URL: ${SNOW_FINDER_BASE_URL}
     ports:
       - "8000:8000"
     networks:
