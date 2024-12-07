@@ -5,3 +5,7 @@
 server.free-planning-poker.com {
    reverse_proxy fpp-server:3003
 }
+
+snow-finder.jkrumm.dev {
+   reverse_proxy snow-finder:8000
+}
