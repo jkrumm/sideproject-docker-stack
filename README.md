@@ -44,8 +44,24 @@ Later there will probably be added more services like:
 4. Run `doppler run -- docker-compose up -d`
 
 ## MariaDB Dump
+You need to install mysql@8.4 or mysql-client@8.4 on MacOS. Because native authentication plugin was removed from mysql 9.0
+Run the command line below to uninstall mysql@9.0.1
 ``` shell
-/usr/local/mysql-8.0.34-macos13-arm64/bin/mysqldump \
+brew uninstall mysql
+```
+Run the command lines below to install mysql@8.4
+``` shell
+brew install mysql@8.4
+ln -s /opt/homebrew/opt/mysql@8.4 /opt/homebrew/opt/mysql
+```
+If you need to have mysql first in your PATH, run: 
+``` shell
+echo 'export PATH="/opt/homebrew/opt/mysql/bin:$PATH"' >> ~/.zshrc
+```
+
+
+``` shell
+/opt/homebrew/opt/mysql/bin/mysqldump \
 --result-file=/Users/jkrumm/SDS_PROD_ROOT-2024_10_26_12_48_56-dump.sql \
 --skip-lock-tables \
 --skip-add-locks \
