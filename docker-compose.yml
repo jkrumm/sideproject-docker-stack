@@ -140,11 +140,9 @@ services:
       - mariadb
     networks:
       - db
-      - backend
+      - proxy
     volumes:
       - fpp_analytics_data:/usr/src/app
-    ports:
-      - "5100:5100"
 
   caddy:
     image: caddy:2
@@ -173,8 +171,6 @@ services:
     environment:
       OPENAI_API_KEY: ${OPENAI_API_KEY}
       BASE_URL: ${SNOW_FINDER_BASE_URL}
-    ports:
-      - "8000:8000"
     networks:
       - proxy
 
@@ -192,4 +188,3 @@ networks:
   proxy:
   db:
   monitoring:
-  backend:
