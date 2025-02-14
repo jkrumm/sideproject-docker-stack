@@ -1,66 +1,74 @@
 # sideproject-docker-stack
+
 Docker Compose stack that runs my side projects and their infrastructure dependencies.
 
 Doppler is used to manage secrets.
 
 Todo:
+
 - [ ] Backup the MariaDB database
 - [ ] SSL for MariaDB
 - [ ] Setup GitHub Actions to deploy the stack
-- [ ] Retention policy for InfluxDB
 
 Nice to have:
+
 - [ ] Read replica for MariaDB
 
 ## Services
+
 Infrastructure:
+
 - MariaDB
-- InfluxDB
-- Telegraf
-- Grafana
+- Caddy
 
 Projects:
+
 - FFP Server (Bun Websocket Server)
 - FPP Analytics (Flask API)
+- Snow Finder (Deno API + React)
 
 <br />
 
 Later there will probably be added more services like:
-- Uptime Kuma
-- Caddy
-- [Simple Logging Service](https://github.com/jkrumm/simple-logging-service)
+
 - Redis
-- Keep
 - Watchtower
 
 ## VPS
+
 - Hetzner ARM CAX21
 - [Guide I used to secure VPS](https://maximorlov.com/4-essential-steps-to-securing-a-vps/)
 
 ## Local Development
+
 1. Install Doppler CLI
 2. Request access to the Doppler Dev project `sideproject-docker-stack`
 3. Set up the Doppler project by running `doppler setup`
 4. Run `doppler run -- docker-compose up -d`
 
 ## MariaDB Dump
+
 You need to install mysql@8.4 or mysql-client@8.4 on MacOS. Because native authentication plugin was removed from mysql 9.0
 Run the command line below to uninstall mysql@9.0.1
-``` shell
+
+```shell
 brew uninstall mysql
 ```
+
 Run the command lines below to install mysql@8.4
-``` shell
+
+```shell
 brew install mysql@8.4
 ln -s /opt/homebrew/opt/mysql@8.4 /opt/homebrew/opt/mysql
 ```
-If you need to have mysql first in your PATH, run: 
-``` shell
+
+If you need to have mysql first in your PATH, run:
+
+```shell
 echo 'export PATH="/opt/homebrew/opt/mysql/bin:$PATH"' >> ~/.zshrc
 ```
 
-
-``` shell
+```shell
 /opt/homebrew/opt/mysql/bin/mysqldump \
 --result-file=/Users/jkrumm/SDS_PROD_ROOT-2024_10_26_12_48_56-dump.sql \
 --skip-lock-tables \
@@ -78,31 +86,43 @@ fpp_estimations fpp_events fpp_feature_flags fpp_page_views fpp_rooms fpp_users 
 ```
 
 ### Backup MariaDB
+
 To trigger a backup of the MariaDB database the container needs to be running.
-``` shell
+
+```shell
 ./mariadb_backups/trigger-backup.sh
 ```
+
 Backups will then be stored in the `mariadb_backups/backups` directory.
 
 ### Download MariaDB Backup
+
 Modify and run the following command to download the backup called `backup` from the `mariadb_backups/backups` directory:
-``` shell
+
+```shell
 scp -r root@{ip}:/home/jkrumm/sideproject-docker-stack/mariadb_backup/backups /Users/jkrumm/Downloads
 ```
 
 ### Restore MariaDB
+
 Run the following command to restore the backup called `restore` in the `mariadb_backups/restore` directory:
-``` shell
+
+```shell
 ./mariadb_backups/restore.sh
 ```
 
 ## Other Notes
+
 ### Rebuild fpp-analytics or ffp-server
+
 Just run:
-``` shell
+
+```shell
 ./fpp_analytics/rebuild-fpp_analytics.sh fpp-analytics
 ```
+
 Steps explained:
+
 1. **Stop the Container**: The script stops the `fpp-analytics` container.
 2. **Remove the Container**: Any existing `fpp-analytics` container is removed.
 3. **Remove the Image**: The associated Docker image is identified and removed.
