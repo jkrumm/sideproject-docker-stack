@@ -18,7 +18,4 @@ snow-finder.jkrumm.dev {
 photos.jkrumm.dev {
    root * /var/www/photos
    file_server
-
-   # Handle SPA routing (if needed)
-   try_files {path} /index.html
 }
