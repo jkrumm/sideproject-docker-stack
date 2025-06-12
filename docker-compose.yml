@@ -77,6 +77,7 @@ services:
       - "443:443"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
+      - ./photo_gallery:/var/www/photos:ro
       - caddy_data:/data
       - caddy_config:/config
     restart: unless-stopped

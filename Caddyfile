@@ -13,3 +13,12 @@ analytics.free-planning-poker.com {
 snow-finder.jkrumm.dev {
    reverse_proxy snow-finder:8000
 }
+
+
+photos.jkrumm.dev {
+   root * /var/www/photos
+   file_server
+
+   # Handle SPA routing (if needed)
+   try_files {path} /index.html
+}
