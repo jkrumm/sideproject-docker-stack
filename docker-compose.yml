@@ -28,7 +28,7 @@ services:
     networks:
       - db
     ports:
-      - "3306:3306"
+      - "33306:3306"
 
   fpp-server:
     container_name: fpp-server
