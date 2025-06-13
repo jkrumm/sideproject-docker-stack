@@ -111,3 +111,5 @@ volumes:
 networks:
   proxy:
   db:
+  plausible_proxy:
+    external: true
