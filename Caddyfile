@@ -21,5 +21,5 @@ photos.jkrumm.dev {
 }
 
 analytics.jkrumm.dev {
-    reverse_proxy plausible:8000
+    reverse_proxy plausible-ce-plausible-1:8000
 }
