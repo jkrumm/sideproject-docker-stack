@@ -6,9 +6,6 @@
 **/influxdb_data/*
 **/grafana_data/*
 
-# Docker ignore
-**/docker-compose.override.yml
-
 # Mac OS files
 .DS_Store
 
