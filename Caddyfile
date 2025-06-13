@@ -19,3 +19,7 @@ photos.jkrumm.dev {
    root * /var/www/photos
    file_server
 }
+
+analytics.jkrumm.dev {
+    reverse_proxy plausible:8000
+}
