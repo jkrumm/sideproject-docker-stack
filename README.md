@@ -44,6 +44,7 @@ Later there will probably be added more services like:
 1. Install Doppler CLI
 2. Request access to the Doppler Dev project `sideproject-docker-stack`
 3. Set up the Doppler project by running `doppler setup`
+4. Set up the external pausible_proxy network `docker network create plausible_proxy`
 4. Run `doppler run -- docker-compose up -d`
 
 ## MariaDB Dump
@@ -90,7 +91,7 @@ fpp_estimations fpp_events fpp_feature_flags fpp_page_views fpp_rooms fpp_users 
 To trigger a backup of the MariaDB database the container needs to be running.
 
 ```shell
-./mariadb_backups/trigger-backup.sh
+./mariadb_backup/trigger-backup.sh
 ```
 
 Backups will then be stored in the `mariadb_backups/backups` directory.
@@ -101,6 +102,10 @@ Modify and run the following command to download the backup called `backup` from
 
 ```shell
 scp -r root@{ip}:/home/jkrumm/sideproject-docker-stack/mariadb_backup/backups /Users/jkrumm/Downloads
+```
+or on my Mac:
+```shell
+scp -r root@{ip}:/home/jkrumm/sideproject-docker-stack/mariadb_backup/backups /Users/johannes.krumm/Downloads
 ```
 
 ### Restore MariaDB

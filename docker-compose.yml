@@ -59,6 +59,7 @@ services:
       BEA_SECRET_KEY: ${BEA_SECRET_KEY}
       DB_HOST: mariadb
       DB_USERNAME: fpp
+      DB_PORT: 33306
       DB_PASSWORD: ${DB_FPP_PW}
     depends_on:
       - mariadb
