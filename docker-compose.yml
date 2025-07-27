@@ -69,6 +69,23 @@ services:
     volumes:
       - fpp_analytics_data:/usr/src/app
 
+  bun-email-api:
+    container_name: bun-email-api
+    platform: linux/arm64
+    restart: unless-stopped
+    build:
+      context: ./bun_email_api/
+      dockerfile: Dockerfile
+    environment:
+      LOG_LEVEL: INFO
+      BEA_RESEND_API_KEY: ${BEA_RESEND_API_KEY}
+      BEA_RECEIVER_EMAIL: ${BEA_RECEIVER_EMAIL}
+      BEA_SECRET_KEY: ${BEA_SECRET_KEY}
+    volumes:
+      - bun_email_api_data:/usr/src/app
+    networks:
+      - proxy
+
   caddy:
     image: caddy:2
     container_name: caddy
@@ -108,6 +125,7 @@ volumes:
   snow_finder_data:
   caddy_data:
   caddy_config:
+  bun_email_api_data:
 
 networks:
   proxy:

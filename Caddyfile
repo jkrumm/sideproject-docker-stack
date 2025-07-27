@@ -10,6 +10,10 @@ analytics.free-planning-poker.com {
    reverse_proxy fpp-analytics:5100
 }
 
+email.jkrumm.dev {
+   reverse_proxy bun-email-api:3010
+}
+
 snow-finder.jkrumm.dev {
    reverse_proxy snow-finder:8000
 }
