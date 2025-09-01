@@ -12,6 +12,10 @@
 # log files
 *.log
 
+# SSL certificates
+certs/
+*.pem
+
 # idea files
 .idea
 

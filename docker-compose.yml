@@ -134,6 +134,26 @@ services:
       TOKEN: ${BESZEL_AGENT_TOKEN}
       HUB_URL: https://beszel.jkrumm.dev
 
+  dozzle-agent:
+    image: amir20/dozzle:latest
+    container_name: dozzle-agent
+    command: agent
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    secrets:
+      - source: cert
+        target: /dozzle_cert.pem
+      - source: key
+        target: /dozzle_key.pem
+    ports:
+      - "7007:7007"
+
+secrets:
+  cert:
+    file: ./cert.pem
+  key:
+    file: ./key.pem
+
 volumes:
   mariadb_data:
   fpp_server_data:
