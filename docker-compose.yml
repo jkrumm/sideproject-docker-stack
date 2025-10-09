@@ -106,9 +106,6 @@ services:
     image: caddy:2
     container_name: caddy
     platform: linux/arm64
-    ports:
-      - "80:80"
-      - "443:443"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - ./photo_gallery:/var/www/photos:ro

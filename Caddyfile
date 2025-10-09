@@ -2,25 +2,6 @@
    email jkrumm@pm.me
 }
 
-server.free-planning-poker.com {
-   reverse_proxy fpp-server:3003
-}
-
-analytics.free-planning-poker.com {
-   reverse_proxy fpp-analytics:5100
-}
-
-email.jkrumm.dev {
-   reverse_proxy bun-email-api:3010
-}
-
-photos.jkrumm.dev {
-   root * /var/www/photos
-   file_server
-}
-
-# NEW: HTTP-only version for Cloudflare Tunnel
-# Can be simplified later on with not exposing Caddy
 :80 {
    # Only serve photos on HTTP (for tunnel)
    root * /var/www/photos
