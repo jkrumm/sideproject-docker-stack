@@ -1,4 +1,19 @@
 services:
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARE_TOKEN}
+    depends_on:
+      - fpp-server
+      - fpp-analytics
+      - bun-email-api
+      - snow-finder
+    networks:
+      - proxy
+
   mariadb:
     container_name: mariadb
     image: mariadb:11.3.2
