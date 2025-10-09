@@ -19,7 +19,20 @@ photos.jkrumm.dev {
    file_server
 }
 
-photos.jkrumm.com {
+# NEW: HTTP-only version for Cloudflare Tunnel
+# Can be simplified later on with not exposing Caddy
+:80 {
+   # Only serve photos on HTTP (for tunnel)
    root * /var/www/photos
    file_server
+
+   # Optional: Add host filtering for security
+   @photos_domain host photos.jkrumm.com
+   handle @photos_domain {
+      root * /var/www/photos
+      file_server
+   }
+
+   # Reject other HTTP requests
+   respond 404
 }
