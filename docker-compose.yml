@@ -13,6 +13,7 @@ services:
       - snow-finder
     networks:
       - proxy
+      - plausible_proxy
 
   mariadb:
     container_name: mariadb
