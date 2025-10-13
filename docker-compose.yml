@@ -11,6 +11,7 @@ services:
       - fpp-analytics
       - bun-email-api
       - snow-finder
+      - caddy
     networks:
       - proxy
       - plausible_proxy

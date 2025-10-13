@@ -4,15 +4,10 @@ Docker Compose stack that runs my side projects and their infrastructure depende
 
 Doppler is used to manage secrets.
 
+Cloudflare Tunnel is used to make the applications accessible.
+
 Todo:
-
-- [ ] Backup the MariaDB database
 - [ ] SSL for MariaDB
-- [ ] Setup GitHub Actions to deploy the stack
-
-Nice to have:
-
-- [ ] Read replica for MariaDB
 
 ## Services
 
@@ -26,6 +21,9 @@ Projects:
 - FFP Server (Bun Websocket Server)
 - FPP Analytics (Flask API)
 - Snow Finder (Deno API + React)
+- Bun Email Api (Send ReactEmail using Resend)
+- Plausible
+- Photos (Caddy hosts static files)
 
 <br />
 
