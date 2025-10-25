@@ -57,6 +57,7 @@ services:
     environment:
       LOG_LEVEL: INFO
       FPP_SERVER_SECRET: ${FPP_SERVER_SECRET}
+      SENTRY_DSN: ${FPP_SERVER_SENTRY_DSN}
     volumes:
       - fpp_server_data:/usr/src/app
     networks:

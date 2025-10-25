@@ -43,7 +43,7 @@ Later there will probably be added more services like:
 2. Request access to the Doppler Dev project `sideproject-docker-stack`
 3. Set up the Doppler project by running `doppler setup`
 4. Set up the external pausible_proxy network `docker network create plausible_proxy`
-4. Run `doppler run -- docker compose up -d`
+5. Run `doppler run -- docker compose up -d`
 
 ## MariaDB Dump
 
