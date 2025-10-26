@@ -22,4 +22,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 5100
 
 # Run app.py when the container launches
-CMD ["gunicorn", "-b", "0.0.0.0:5100", "app:app"]
+# Using 2 workers with 2 threads each for low-traffic analytics app with background scheduler
+CMD ["gunicorn", "-b", "0.0.0.0:5100", "--workers", "2", "--threads", "2", "--worker-class", "gthread", "--timeout", "120", "app:app"]
