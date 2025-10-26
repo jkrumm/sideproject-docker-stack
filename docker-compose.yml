@@ -79,6 +79,10 @@ services:
       DB_USERNAME: fpp
       DB_PORT: 3306
       DB_PASSWORD: ${DB_FPP_PW}
+      FPP_ANALYTICS_SENTRY_DSN: ${FPP_ANALYTICS_SENTRY_DSN}
+      SENTRY_ENVIRONMENT: production
+      SENTRY_TRACES_SAMPLE_RATE: 0.1
+      SENTRY_PROFILES_SAMPLE_RATE: 0.1
     depends_on:
       - mariadb
     networks:
