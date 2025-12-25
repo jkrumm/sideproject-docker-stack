@@ -1,27 +1,38 @@
-# Use an official Python runtime as a base image
-FROM python:3.11.1
+# Multi-stage build with uv for fast dependency resolution
+FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim AS builder
 
-# Set the working directory in the container
-WORKDIR /usr/src/app
-
-# Install git and other package dependencies
-RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install -y git
+WORKDIR /app
 
 # Clone the repository
-RUN git clone https://github.com/jkrumm/free-planning-poker.git
+RUN apt-get update && apt-get install -y git && \
+    git clone https://github.com/jkrumm/free-planning-poker.git && \
+    mv free-planning-poker/fpp-analytics/* . && \
+    rm -rf free-planning-poker
 
-# Set the working directory in the container to your app directory
-WORKDIR /usr/src/app/free-planning-poker/analytics
+# Install dependencies (cached layer)
+RUN uv sync --frozen --no-dev --no-install-project
 
-# Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+# Install the project itself
+RUN uv sync --frozen --no-dev
 
-# Make port 5100 available to the world outside this container
+# Production image
+FROM python:3.12-slim-bookworm
+
+WORKDIR /app
+
+# Copy virtual environment from builder
+COPY --from=builder /app/.venv /app/.venv
+ENV PATH="/app/.venv/bin:$PATH"
+
+# Copy application code
+COPY --from=builder /app .
+
+# Create data directory
+RUN mkdir -p /app/data
+
 EXPOSE 5100
 
-# Single worker configuration for personal use analytics app
-# Prevents race conditions with Parquet file reads/writes and simplifies resource usage
-# --threads=1 ensures sequential processing, avoiding concurrent Parquet file access issues
-CMD ["gunicorn", "-b", "0.0.0.0:5100", "--workers", "1", "--threads", "1", "--worker-class", "gthread", "--timeout", "120", "app:app"]
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD python -c "import httpx; httpx.get('http://localhost:5100/health').raise_for_status()"
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5100", "--workers", "1"]

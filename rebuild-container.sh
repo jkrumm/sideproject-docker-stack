@@ -2,15 +2,15 @@
 
 # Check if a container name was provided as an argument
 if [ -z "$1" ]; then
-  echo "Usage: $0 <fpp-server|fpp-analytics|snow-finder|bun-email-api>"
+  echo "Usage: $0 <fpp-server|fpp-analytics|fpp-analytics-updater|snow-finder|bun-email-api>"
   exit 1
 fi
 
 containerName="$1"
 
 # Validate container name
-if [ "$containerName" != "fpp-server" ] && [ "$containerName" != "fpp-analytics" ] && [ "$containerName" != "snow-finder" ] && [ "$containerName" != "bun-email-api" ]; then
-  echo "Invalid container name. Only 'fpp-server', 'fpp-analytics', 'snow-finder', or 'bun-email-api' are allowed."
+if [ "$containerName" != "fpp-server" ] && [ "$containerName" != "fpp-analytics" ] && [ "$containerName" != "fpp-analytics-updater" ] && [ "$containerName" != "snow-finder" ] && [ "$containerName" != "bun-email-api" ]; then
+  echo "Invalid container name. Only 'fpp-server', 'fpp-analytics', 'fpp-analytics-updater', 'snow-finder', or 'bun-email-api' are allowed."
   exit 1
 fi
 
@@ -38,7 +38,7 @@ fi
 
 # Remove volumes associated with the container explicitly
 case "$containerName" in
-  "fpp-analytics")
+  "fpp-analytics" | "fpp-analytics-updater")
     volumeName="sideproject-docker-stack_fpp_analytics_data"
     ;;
   "fpp-server")

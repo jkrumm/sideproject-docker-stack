@@ -9,6 +9,7 @@ services:
     depends_on:
       - fpp-server
       - fpp-analytics
+      - fpp-analytics-updater
       - bun-email-api
       - snow-finder
       - caddy
@@ -75,21 +76,40 @@ services:
       ANALYTICS_SECRET_TOKEN: ${ANALYTICS_SECRET_TOKEN}
       BEA_BASE_URL: ${BEA_BASE_URL}
       BEA_SECRET_KEY: ${BEA_SECRET_KEY}
+      FPP_ANALYTICS_SENTRY_DSN: ${FPP_ANALYTICS_SENTRY_DSN}
+      SENTRY_ENVIRONMENT: production
+      DATA_DIR: /app/data
+    depends_on:
+      - fpp-analytics-updater
+    networks:
+      - proxy
+    volumes:
+      - fpp_analytics_data:/app/data:ro
+
+  fpp-analytics-updater:
+    container_name: fpp-analytics-updater
+    platform: linux/arm64
+    restart: unless-stopped
+    build:
+      context: ./fpp_analytics/
+      dockerfile: Dockerfile
+    entrypoint: ["sh", "-c", "while true; do python update_readmodel.py; sleep 900; done"]
+    environment:
+      LOG_LEVEL: INFO
       DB_HOST: mariadb
       DB_USERNAME: fpp
       DB_PORT: 3306
       DB_PASSWORD: ${DB_FPP_PW}
+      DATA_DIR: /app/data
       FPP_ANALYTICS_SENTRY_DSN: ${FPP_ANALYTICS_SENTRY_DSN}
       SENTRY_ENVIRONMENT: production
-      SENTRY_TRACES_SAMPLE_RATE: 0.1
-      SENTRY_PROFILES_SAMPLE_RATE: 0.1
+      UPTIMEKUMA_PUSH_URL: ${UPTIMEKUMA_PUSH_URL}
     depends_on:
       - mariadb
     networks:
       - db
-      - proxy
     volumes:
-      - fpp_analytics_data:/usr/src/app
+      - fpp_analytics_data:/app/data
 
   bun-email-api:
     container_name: bun-email-api
