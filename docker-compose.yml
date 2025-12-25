@@ -93,7 +93,7 @@ services:
     build:
       context: ./fpp_analytics/
       dockerfile: Dockerfile
-    entrypoint: ["sh", "-c", "while true; do python update_readmodel.py; sleep 900; done"]
+    entrypoint: ["sh", "-c", "while true; do python update_readmodel.py; sleep 600; done"]
     environment:
       LOG_LEVEL: INFO
       DB_HOST: mariadb
