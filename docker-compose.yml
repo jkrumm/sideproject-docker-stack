@@ -7,11 +7,6 @@ services:
     environment:
       - TUNNEL_TOKEN=${CLOUDFLARE_TOKEN}
     depends_on:
-      - fpp-server
-      - fpp-analytics
-      - fpp-analytics-updater
-      - bun-email-api
-      - snow-finder
       - caddy
     networks:
       - proxy
@@ -129,15 +124,22 @@ services:
       - proxy
 
   caddy:
-    image: caddy:2
+    build:
+      context: ./caddy
+      dockerfile: Dockerfile
     container_name: caddy
     platform: linux/arm64
+    restart: unless-stopped
+    ports:
+      - "443:443"
+      - "80:80"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - ./photo_gallery:/var/www/photos:ro
       - caddy_data:/data
       - caddy_config:/config
-    restart: unless-stopped
+    environment:
+      - CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_TOKEN}
     networks:
       - proxy
       - plausible_proxy

@@ -1,19 +1,32 @@
 {
-   email jkrumm@pm.me
+	acme_dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+	auto_https disable_redirects
 }
 
-:80 {
-   # Only serve photos on HTTP (for tunnel)
-   root * /var/www/photos
-   file_server
+# === PUBLIC SERVICES (Cloudflare + Tailscale) ===
+# Both http:// (cloudflared) and https:// (Tailscale) variants
 
-   # Optional: Add host filtering for security
-   @photos_domain host photos.jkrumm.com
-   handle @photos_domain {
-      root * /var/www/photos
-      file_server
-   }
+fpp-server.jkrumm.com, http://fpp-server.jkrumm.com {
+	reverse_proxy fpp-server:3003
+}
 
-   # Reject other HTTP requests
-   respond 404
+fpp-analytics.jkrumm.com, http://fpp-analytics.jkrumm.com {
+	reverse_proxy fpp-analytics:5100
+}
+
+snow-finder.jkrumm.com, http://snow-finder.jkrumm.com {
+	reverse_proxy snow-finder:8000
+}
+
+bun-email-api.jkrumm.com, http://bun-email-api.jkrumm.com {
+	reverse_proxy bun-email-api:3010
+}
+
+photos.jkrumm.com, http://photos.jkrumm.com {
+	root * /var/www/photos
+	file_server
+}
+
+plausible.jkrumm.com, http://plausible.jkrumm.com {
+	reverse_proxy plausible:8000
 }
