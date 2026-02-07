@@ -11,6 +11,8 @@ services:
     networks:
       - proxy
       - plausible_proxy
+    security_opt:
+      - no-new-privileges:true
 
   mariadb:
     container_name: mariadb
@@ -42,6 +44,14 @@ services:
       - db
     ports:
       - "33306:3306"
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 2g
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "3"
 
   fpp-server:
     container_name: fpp-server
@@ -58,6 +68,8 @@ services:
       - fpp_server_data:/usr/src/app
     networks:
       - proxy
+    security_opt:
+      - no-new-privileges:true
 
   fpp-analytics:
     container_name: fpp-analytics
@@ -80,6 +92,9 @@ services:
       - proxy
     volumes:
       - fpp_analytics_data:/app/data:ro
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 1g
 
   fpp-analytics-updater:
     container_name: fpp-analytics-updater
@@ -105,6 +120,13 @@ services:
       - db
     volumes:
       - fpp_analytics_data:/app/data
+    security_opt:
+      - no-new-privileges:true
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "3"
 
   bun-email-api:
     container_name: bun-email-api
@@ -122,6 +144,8 @@ services:
       - bun_email_api_data:/usr/src/app
     networks:
       - proxy
+    security_opt:
+      - no-new-privileges:true
 
   caddy:
     build:
@@ -143,6 +167,8 @@ services:
     networks:
       - proxy
       - plausible_proxy
+    security_opt:
+      - no-new-privileges:true
 
   snow-finder:
     container_name: snow-finder
@@ -158,6 +184,8 @@ services:
       BASE_URL: ${SNOW_FINDER_BASE_URL}
     networks:
       - proxy
+    security_opt:
+      - no-new-privileges:true
 
   beszel-agent:
     image: henrygd/beszel-agent
@@ -188,6 +216,8 @@ services:
         target: /dozzle_key.pem
     ports:
       - "100.82.157.104:7007:7007"
+    security_opt:
+      - no-new-privileges:true
 
 secrets:
   cert:
