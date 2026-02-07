@@ -27,6 +27,21 @@ if [ "$(id -u)" -ne 0 ]; then
 fi
 
 # --------------------------------------------------
+# Fix apt sources (Hetzner mirror lacks ARM64 packages)
+# --------------------------------------------------
+if grep -q "mirror.hetzner.com" /etc/apt/sources.list 2>/dev/null; then
+  echo "=== Fixing apt sources for ARM64 ==="
+  cp /etc/apt/sources.list /etc/apt/sources.list.bak
+  cat > /etc/apt/sources.list <<'SOURCES'
+deb http://ports.ubuntu.com/ubuntu-ports jammy main restricted universe multiverse
+deb http://ports.ubuntu.com/ubuntu-ports jammy-updates main restricted universe multiverse
+deb http://ports.ubuntu.com/ubuntu-ports jammy-backports main restricted universe multiverse
+deb http://ports.ubuntu.com/ubuntu-ports jammy-security main restricted universe multiverse
+SOURCES
+  echo "Replaced Hetzner mirror with ports.ubuntu.com (backup: sources.list.bak)"
+fi
+
+# --------------------------------------------------
 # System update
 # --------------------------------------------------
 echo "=== Updating system ==="
