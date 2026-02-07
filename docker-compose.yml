@@ -13,6 +13,8 @@ services:
       - plausible_proxy
     security_opt:
       - no-new-privileges:true
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
 
   mariadb:
     container_name: mariadb
@@ -202,6 +204,8 @@ services:
       KEY: ${BESZEL_AGENT_KEY}
       TOKEN: ${BESZEL_AGENT_TOKEN}
       HUB_URL: https://beszel.jkrumm.com
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
 
   dozzle-agent:
     image: amir20/dozzle:latest
@@ -217,6 +221,22 @@ services:
         target: /dozzle_key.pem
     ports:
       - "100.82.157.104:7007:7007"
+    security_opt:
+      - no-new-privileges:true
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+
+  watchtower:
+    image: nickfedor/watchtower:latest
+    container_name: watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      WATCHTOWER_LABEL_ENABLE: "true"
+      WATCHTOWER_CLEANUP: "true"
+      WATCHTOWER_SCHEDULE: "0 0 4 * * *"
+      WATCHTOWER_INCLUDE_RESTARTING: "true"
     security_opt:
       - no-new-privileges:true
 
