@@ -214,13 +214,8 @@ services:
     command: agent
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-    secrets:
-      - source: cert
-        target: /dozzle_cert.pem
-      - source: key
-        target: /dozzle_key.pem
     ports:
-      - "100.82.157.104:7007:7007"
+      - "${TAILSCALE_IP}:7007:7007"
     security_opt:
       - no-new-privileges:true
     labels:
@@ -237,14 +232,10 @@ services:
       WATCHTOWER_CLEANUP: "true"
       WATCHTOWER_SCHEDULE: "0 0 4 * * *"
       WATCHTOWER_INCLUDE_RESTARTING: "true"
+      WATCHTOWER_NOTIFICATION_URL: "ntfy://:${NTFY_TOKEN}@ntfy.jkrumm.com/vps-watchtower"
+      WATCHTOWER_NOTIFICATIONS_LEVEL: warn
     security_opt:
       - no-new-privileges:true
-
-secrets:
-  cert:
-    file: ./cert.pem
-  key:
-    file: ./key.pem
 
 volumes:
   mariadb_data:
