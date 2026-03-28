@@ -29,6 +29,7 @@ services:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PW}
       DB_READ_PW: ${DB_READ_PW}
       DB_FPP_PW: ${DB_FPP_PW}
+      FPP_DB_BACKUP_PUSH_URL: ${FPP_DB_BACKUP_PUSH_URL}
     restart: unless-stopped
     healthcheck:
       interval: 10s
@@ -106,6 +107,8 @@ services:
       context: ./fpp_analytics/
       dockerfile: Dockerfile
     entrypoint: ["sh", "-c", "while true; do python update_readmodel.py; sleep 600; done"]
+    healthcheck:
+      disable: true
     environment:
       LOG_LEVEL: INFO
       DB_HOST: mariadb

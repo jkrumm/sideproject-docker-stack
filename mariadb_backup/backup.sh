@@ -19,3 +19,8 @@ mkdir -p "$BACKUP_DIR"
 /usr/bin/mariadb-backup --backup --target-dir="$BACKUP_DIR" --user=read --password="$DB_READ_PW" --host=mariadb
 
 /usr/bin/mariadb-backup --prepare --target-dir="$BACKUP_DIR"
+
+# Ping Uptime Kuma push monitor on success
+if [ -n "$FPP_DB_BACKUP_PUSH_URL" ]; then
+  curl -fsS "$FPP_DB_BACKUP_PUSH_URL" > /dev/null
+fi
